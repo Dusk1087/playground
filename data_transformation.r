@@ -35,8 +35,71 @@ daily <- flights |>
   group_by(year, month, day)
 daily
 
+#grouping data with multiple variables leads to issues and we use .group
 daily_flight <- daily |> 
   summarize(
     n = n(),
-    .groups = "drop_last"
+    .group = 'keep'
     )
+daily_flight
+
+#ungrouping the data allows us to summarize the data without the grouping variables.
+daily |> 
+  ungroup() |> 
+  summarize(
+    avg_delay = mean(dep_delay, na.rm = TRUE),
+    flights = n()
+  )
+
+#.by allows grouping within a single operation
+flights |> 
+  summarize(
+    delay = mean(dep_delay, na.rm = TRUE),
+    n = n(),
+    .by = month
+  )
+
+#.by multiple variables grouping within a single operation
+flights |> 
+  summarize(
+    delay = mean(dep_delay, na.rm = TRUE),
+    n = n(),
+    .by = c(origin, dest)
+  )
+
+#EXAMPLES
+#which carrier has the worst average delays.  Challenge: can you disentangle the effects of bad airports vs. bad carriers?
+flights |> 
+  group_by(carrier) |> 
+  summarize(
+    delay = mean(dep_delay, na.rm = TRUE),
+    n = n()
+  ) |> 
+  slice_max(delay, n=1, with_ties = FALSE) |>
+  relocate(carrier)
+  
+#which carrier has the worst average delays.  
+flights |> 
+  group_by(carrier) |> 
+  summarize(
+    delay = mean(dep_delay, na.rm = TRUE),
+    n = n()
+  ) |> 
+  slice_max(delay, n=1, with_ties = FALSE) |> 
+  relocate(carrier)
+
+#Challenge: can you disentangle the effects of bad airports vs. bad carriers?
+flights |> 
+  group_by(carrier, origin) |> 
+  summarize(
+    delay = mean(dep_delay, na.rm = TRUE),
+    n=n()
+  )  |> 
+  slice_max(delay, n=1, with_ties = FALSE) |> 
+  relocate(origin, carrier)
+
+#find the flights that are most delayed upon departure from each destination
+flights |> 
+  group_by(dest) |> 
+  slice_max(dep_delay) |> 
+  relocate(dest, carrier)
