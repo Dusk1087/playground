@@ -31,4 +31,12 @@ flights |>
 # slice_max(x, n = 1) takes the row with the largest value of column x.
 # slice_sample(n = 1) takes one random row.
 
+daily <- flights |> 
+  group_by(year, month, day)
+daily
 
+daily_flight <- daily |> 
+  summarize(
+    n = n(),
+    .groups = "drop_last"
+    )
