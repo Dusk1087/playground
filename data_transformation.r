@@ -1,6 +1,7 @@
 library(tidyverse)
 library(janitor)
 library(nycflights13)
+library(friends)
 
 #group_by and summarize are used in order to calculate the average delay for each month.
 flights |> 
@@ -101,5 +102,29 @@ flights |>
 #find the flights that are most delayed upon departure from each destination
 flights |> 
   group_by(dest) |> 
-  slice_max(dep_delay) |> 
-  relocate(dest, carrier)
+  slice_max(dep_delay, n = 2) |> 
+  relocate(dest, flight,dep_delay)
+
+#How do delays vary over the course of the day? Illustrate your answer with a plot.
+delays_by_hour <- flights |> 
+  group_by(hour) |> 
+  summarize(
+    delay = mean(dep_delay, na.rm = TRUE)
+  )
+delays_by_hour |>   
+  ggplot(aes(x = hour, y = delay)) +
+  geom_point(na.rm = TRUE)+
+  geom_line(na.rm = TRUE) +
+  labs(
+    title = "Average flight delay per hour",
+    x = "hour of the day",
+    y = "average delay (min)"
+  ) +
+  theme(
+    plot.title = element_text(hjust =.5)
+  )
+  
+#What happens if you supply a negative n to slice_min() and friends?  Everything but the first item is reported
+flights |> 
+  slice_min(dep_delay, n = -1) |> 
+  relocate(carrier)
