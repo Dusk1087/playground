@@ -128,3 +128,10 @@ delays_by_hour |>
 flights |> 
   slice_min(dep_delay, n = -1) |> 
   relocate(carrier)
+
+#Explain what count() does in terms of the dplyr verbs you just learned. 
+#What does the sort argument to count() do?
+#Equivalent of count
+flights |> 
+  group_by(carrier) |> 
+  summarize(n=n())
