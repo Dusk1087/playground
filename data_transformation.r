@@ -131,7 +131,53 @@ flights |>
 
 #Explain what count() does in terms of the dplyr verbs you just learned. 
 #What does the sort argument to count() do?
-#Equivalent of count
+#riends |> 
+  group_by(speaker) |> 
+  slice_min(speaker, n = -1)ent of count
 flights |> 
   group_by(carrier) |> 
   summarize(n=n())
+
+#Alternatively, using the count() function
+flights |> 
+  count(carrier)
+
+df <- tibble(
+  x = 1:5,
+  y = c("a", "b", "a", "a", "b"),
+  z = c("K", "K", "L", "L", "K")
+)
+
+#Write down what you think the output will look like, then check if you were correct, and describe what group_by() does
+df |> 
+  group_by(y)
+  
+#Write down what you think the output will look like, then check if you were correct, and describe what arrange() does. 
+#Also, comment on how it’s different from the group_by() in part (a).
+df |> 
+  arrange(y)
+
+df |> 
+  group_by(z) |> 
+ # slice_min(x, n=1) |> 
+  summarize(mean = mean(x),
+            n = n()
+  )
+
+df |>
+  group_by(y, z) |>
+  summarize(mean_x = mean(x), .groups = "drop")
+
+
+df |>
+  group_by(y, z) |>
+  summarize(count = n(), .groups = "drop_last") |> 
+  summarise(maxx=max(count),.group = 'drop')
+
+df |>
+  group_by(y, z) |>
+  summarize(mean_x = mean(x))
+
+df |>
+  group_by(y, z) |>
+  mutate(mean_x = mean(x))
