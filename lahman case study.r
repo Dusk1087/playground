@@ -13,3 +13,6 @@ batters |>
   geom_point(alpha = .5) +
   geom_smooth(se = FALSE)
 
+
+batters |> 
+  arrange(desc(performance))
