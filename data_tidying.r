@@ -16,4 +16,14 @@ ggplot(table1, aes(x = year, y = cases)) +
   geom_point(aes(color = country, shape = country)) +
   scale_x_continuous(breaks = c(1999, 2000)) # x-axis breaks at 1999 and 2000
 
+ggplot(table1, aes(x = year, y = cases)) +
+  geom_point(aes(color = country, shape = country)) +
+  geom_line(aes(group = country), color = "grey50") +
+  scale_x_continuous(breaks = c(1999, 2000)) # x-axis breaks at 1999 and 2000
+
+view(table2)
+table2 <- table2
+table1 <- table1
+table3 <- table3
 view(table1)
+view(table3)
