@@ -20,6 +20,10 @@ flights |>
   ) +
   geom_point()
 
+
+# First exposure to the loess regression ----------------------------------
+
+
 # Filter out rows with missing values in speed or distance
 summary_data <- flights |> 
   group_by(dest) |> 
@@ -42,3 +46,50 @@ ggplot(summary_data, aes(x = distance, y = speed)) +
   geom_point() +  # Original points
   geom_line(aes(y = smoothed_speed), color = "blue", size = 1)  # LOESS-smoothed curve
 
+
+# Restyling exercise ------------------------------------------------------
+
+flights |>
+  filter(dest == "IAH") |>
+  group_by(year, month, day) |>
+  summarize(
+    n = n(),
+    delay = mean(arr_delay, na.rm = TRUE)
+  ) |>
+  filter(n > 10) |>
+  print(n = Inf)
+
+flights |>
+  filter(
+    carrier == "UA",
+    dest %in% c("IAH", "HOU"),
+    sched_dep_time > 0900, 
+    sched_arr_time < 2000
+    ) |>
+  group_by(flight) |>
+  summarize(
+    delay = mean(arr_delay, na.rm = TRUE), 
+    cancelled = sum(is.na(arr_delay)),
+    n = n()
+    ) |>
+  filter(n>20) |> 
+  print(n = Inf)
+
+flights |>
+  filter(dest == "IAH") |>
+  group_by(year, month, day) |>
+  summarize(
+    n = n(),
+    delay = mean(arr_delay, na.rm = TRUE)
+  ) |>
+  filter(n > 10)
+
+flights |>
+  filter(carrier == "UA", dest %in% c("IAH", "HOU"), sched_dep_time >
+    0900, sched_arr_time < 2000) |>
+  group_by(flight) |>
+  summarize(delay = mean(
+    arr_delay,
+    na.rm = TRUE
+  ), cancelled = sum(is.na(arr_delay)), n = n()) |>
+  filter(n > 10)
