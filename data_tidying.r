@@ -71,4 +71,31 @@ df |>
     names_to = 'measurement',
     values_to = 'value'
   )
+
+
+# pivot longer with complex column names ------------------------------------------------------------
+
+
+view(who2)
+who2 <- who2
+who2 |> 
+  glimpse()
+
+who2 |> 
+  pivot_longer(
+    cols = !(country:year),
+    names_to = c('diagnosis', 'gender', 'age'),
+    names_sep = '_',
+    values_to = 'count'
+  )
+
+
+# pivot longer with column names including variable values and var --------
+
+household |> 
+  pivot_longer(
+    cols = !family,
+    names_to = c('.value', 'child'),
+    names_sep = '_',
+    values_drop_na = TRUE
   )
