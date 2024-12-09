@@ -27,3 +27,48 @@ table1 <- table1
 table3 <- table3
 view(table1)
 view(table3)
+
+# pivot longer introduction -----------------------------------------------
+
+view(billboard)
+billboard_longer <- billboard |> 
+  pivot_longer(
+    cols = starts_with("wk"),
+    names_to = 'week',
+    values_to = 'rank',
+    values_drop_na = TRUE
+  ) |> 
+  mutate(
+    week = parse_number(week)
+  )
+
+
+billboard_longer |> 
+  ggplot(aes(x = week, y = rank, group = track)) +
+  geom_line(alpha = 0.25) +
+  scale_y_reverse()
+
+billboard_longer |> 
+  ggplot(aes(x = week, y = rank, group = track)) +
+  geom_line(alpha = 0.25) +
+  scale_x_reverse()
+
+
+# pivot example -----------------------------------------------------------
+
+df <- tribble(
+  ~id, ~bp1, ~bp2,
+  "A",  100,  120,
+  "B",  140,  115,
+  "C",  120,  125
+)
+  
+view(df)
+
+df |> 
+  pivot_longer(
+    cols = bp1:bp2,
+    names_to = 'measurement',
+    values_to = 'value'
+  )
+  )
