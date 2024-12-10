@@ -100,9 +100,116 @@ household |>
     values_drop_na = TRUE
   )
 
+
+# my client data_test the pivot wider technique ---------------------------
+
+
 client_data <- data.frame(
   name = c('email1', 'email1', 'email1', 'email2', 'email2'),
   file_name = c('file1email1', 'file2email1', 'file3email1', 'file1email2', 'file2email2')
 )
 view(client_data)
+
+client_data |> 
+  pivot_wider(
+    names_from
+  )
+
+cms_patient_experience |> 
+  distinct(measure_cd, measure_title)
+
+cms_patient_experience
+
+cms_patient_experience |> 
+  pivot_wider(
+    names_from = measure_cd,
+    values_from = prf_rate
+  )
+
+cms_patient_experience |> 
+  pivot_wider(
+    id_cols = starts_with('org'),
+    names_from = measure_cd,
+    values_from = prf_rate
+  )
+
+
+# Example data
+data <- data.frame(
+  email = c("user1@example.com", "user1@example.com", "user1@example.com", "user2@example.com", "user2@example.com"),
+  file_name = c("email1file1.pdf", "email1file2.pdf", "email1file3.pdf","email2file1.pdf", "email2file2.pdf")
+)
+
+
+print(data)
+
+add_file_counter <- data |> 
+  group_by(email) |> 
+  mutate(file_number = paste0("file_",row_number())) |> 
+  ungroup()# Create a unique number for each file per email
+print(add_file_counter)
+add_file_counter |> 
+  distinct(file_number)
+
+# Transform the data
+result <- add_file_counter |> 
+  pivot_wider(
+    names_from = file_number, 
+    values_from = file_name,
+    names_prefix = "file_"
+  )
+print(result)
+
+df <- tribble(
+  ~id, ~measurement, ~value,
+  "A",        "bp1",    100,
+  "B",        "bp1",    140,
+  "B",        "bp2",    115, 
+  "A",        "bp2",    120,
+  "A",        "bp3",    105
+)
+df
+df |> 
+  pivot_wider(
+    id_cols = id,
+    names_from = measurement,
+    values_from = value
+  )
+
+df |> 
+  distinct(measurement) |> 
+  pull()
+
+df |> 
+  distinct(measurement)
+
+df |> 
+  select(-measurement, -value) |> 
+  distinct() 
+
+df |> 
+  select(-measurement, -value) |> 
+  distinct() |> 
+  mutate(x = NA, y = NA, z = NA)
+
+
+df23 <- tribble(
+  ~id, ~measurement, ~value,
+  "A",        "bp1",    100,
+  "A",        "bp1",    102,
+  "A",        "bp2",    120,
+  "B",        "bp1",    140, 
+  "B",        "bp2",    115
+)
+df23 |> 
+  pivot_wider(
+    id_cols = id,
+    names_from = measurement,
+    values_from = value
+  )
+
+df23 |> 
+  group_by(id, measurement) |> 
+  summarize(n = n(), .groups = "drop") |> 
+  filter(n > 0)
 
