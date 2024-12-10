@@ -99,3 +99,10 @@ household |>
     names_sep = '_',
     values_drop_na = TRUE
   )
+
+client_data <- data.frame(
+  name = c('email1', 'email1', 'email1', 'email2', 'email2'),
+  file_name = c('file1email1', 'file2email1', 'file3email1', 'file1email2', 'file2email2')
+)
+view(client_data)
+
